@@ -1,5 +1,13 @@
 import express from 'express';
 const router = express.Router();
+import { Empresas } from '@libs/empresas/Empresas';
+const empresasModel = new Empresas();
+
+empresasModel.add({
+    codigo: '',
+    nombre: 'Mi Empresa',
+    status: 'Activo'
+});
 
 //Registrar los endpoint en router
 router.get('/', (_req, res)=> {
@@ -15,7 +23,7 @@ router.get('/', (_req, res)=> {
 });
 
 router.get('/all', (_req, res) => {
-    res.status(200).json({'msg': 'Not Implemented yet'});
+    res.status(200).json(empresasModel.getAll());
 });
 
 

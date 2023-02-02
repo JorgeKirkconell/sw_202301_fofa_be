@@ -11,8 +11,7 @@ usuariosModel.add({
     correo: 'correoAdmin@unicah.edu',
     nombre: 'usuarioAdmin',
     password: 'usuarioAdmin',
-    roles: 'UsrAdministrador'
-    });
+});
 
 router.get('/', (_req, res)=>{
     const jsonUrls = {
@@ -53,15 +52,13 @@ router.post('/new', (req, res) => {
     const {
         correo = 'nuevoRegistro@registro.com',
         nombre = 'UsuarioNuevo',
-        password ='UsuarioNuevo',
-        roles = 'UsuarioNormal' 
+        password ='UsuarioNuevo'
     } = req.body;
     const newUsuario: IUsuarios = {
         codigo : "",
         correo,
         nombre,
-        password,
-        roles
+        password
         
     };
     if (usuariosModel.add(newUsuario)) {
@@ -74,10 +71,14 @@ router.post('/new', (req, res) => {
 
 router.put('/upd/:id', (req, res) => {
     const { id } = req.params;
+    console.log(id);
+    console.log(req.body);
+
     const {
-        correo = 'User Blocked',
-        nombre = 'User Blocked',
-        password = 'User Blocked',
+        correo,
+        nombre,
+        password,
+        roles,
         observacion = "Registro Modificado en algun momento"
     } = req.body;
     const UpdateUsuario : IUsuarios = {
@@ -85,6 +86,7 @@ router.put('/upd/:id', (req, res) => {
         correo,
         nombre,
         password,
+        roles,
         observacion,
     };
         

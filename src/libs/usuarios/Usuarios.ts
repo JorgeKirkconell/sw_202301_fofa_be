@@ -31,7 +31,8 @@ private usuarios : IUsuarios[];
         ...nuevoUsuario,
         codigo: (Math.random()* 1000).toString()+new Date().getTime().toString(),
         created: date,
-        ultimoAcceso: date
+        ultimoAcceso: date,
+        roles: "UsuarioNormal"
     }
     this.usuarios.push(nueva);
     return true;

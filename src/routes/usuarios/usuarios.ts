@@ -18,8 +18,16 @@ router.get('/', (_req, res)=>{
     const jsonUrls = {
         "getAll": {"method":"get", "url": "usuarios/all"},
         "getById": {"method":"get", "url": "usuarios/byid/:id"},
-        "new": {"method":"post", "url": "usuarios/new"},
-        "update": {"method":"put", "url": "usuarios/upd/:id"},
+        "new": {"method":"post", "url": "usuarios/new", "formatBody (Min)":{
+            correo: '',
+            nombre: '',
+            password: ''
+        }},
+        "update": {"method":"put", "url": "usuarios/upd/:id", "formatBody (Min >> if not: User Blocked)":{
+            correo: '',
+            nombre: '',
+            password: ''
+        }},
         "delete": {"method":"delete", "url": "usuarios/del/:id"},
     };
     res.status(200).json(jsonUrls);
@@ -43,10 +51,10 @@ router.get('/byid/:id', (req, res)=>{
 router.post('/new', (req, res) => {
     console.log("Usuarios /new request body:", req.body);
     const {
-        correo = 'usuarioNormal@unicah.edu',
-        nombre = 'usuarioNormal',
-        password ='usuarioNormal',
-        roles= "usuarioNormal", 
+        correo = 'nuevoRegistro@registro.com',
+        nombre = 'UsuarioNuevo',
+        password ='UsuarioNuevo',
+        roles = 'UsuarioNormal' 
     } = req.body;
     const newUsuario: IUsuarios = {
         codigo : "",
@@ -67,22 +75,20 @@ router.post('/new', (req, res) => {
 router.put('/upd/:id', (req, res) => {
     const { id } = req.params;
     const {
-        correo,
-        nombre,
-        password,
-        roles, 
+        correo = 'User Blocked',
+        nombre = 'User Blocked',
+        password = 'User Blocked',
         observacion = "Registro Modificado en algun momento"
     } = req.body;
-    const UpdateEmpresa : IUsuarios = {
-        codigo : id,
+    const UpdateUsuario : IUsuarios = {
+        codigo: id,
         correo,
         nombre,
         password,
-        roles, 
-        observacion
+        observacion,
     };
         
-    if (usuariosModel.update(UpdateEmpresa)) {
+    if (usuariosModel.update(UpdateUsuario)) {
         return res
         .status(200)
         .json({"updated": true});

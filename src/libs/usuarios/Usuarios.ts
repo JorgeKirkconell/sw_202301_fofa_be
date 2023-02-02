@@ -30,7 +30,6 @@ private usuarios : IUsuarios[];
     const nueva: IUsuarios = {
         ...nuevoUsuario,
         codigo: (Math.random()* 1000).toString()+new Date().getTime().toString(),
-        roles: "Usuario Basico",
         created: date,
         ultimoAcceso: date
     }

@@ -1,0 +1,5 @@
+- Revisar el update {
+    - Validaciones que esten todos los datos
+    - No actualizar id no existenres
+}
+- Revisar la encriptacion de la contraseña

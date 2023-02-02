@@ -1,4 +1,4 @@
-export interface IEmpresas{
+export interface IEmpresa {
     codigo: string;
     nombre: string;
     status: string;
@@ -8,41 +8,54 @@ export interface IEmpresas{
 }
 
 
+export class Empresas {
 
-export class Empresas{
-    /*private currentEmpresas: IEmpresas = {
-        codigo: "",
-        nombre: "",
-        status: "",
-        created: undefined,
-        updated: undefined
-    }*/
-    private empresas : IEmpresas[];
+private empresas : IEmpresa[];
     constructor(){
-        this.empresas = [];
-    }
-    add(nuevaEmpresa : IEmpresas){
-        const date = new Date();
-        const nueva: IEmpresas = {
-            ...nuevaEmpresa,
-            codigo: (Math.random()*1000).toString() + new Date().getTime().toString(),
-            created: date,
-            updated: date 
-        }
-        this.empresas.push(nueva);
-        return true;
+    this.empresas = [];
     }
     getAll(){
-        return this.empresas;
+    return this.empresas;
     }
-    update(updateEmpresa: IEmpresas){
-        const newEmpresas: IEmpresas[] = this.empresas.map((emp)=>{
-            if (emp.codigo === updateEmpresa.codigo){
-                return {...emp, ...updateEmpresa, updated : new Date()};
-            } 
-            return emp;       
+    getById(codigo: string){
+    const empresaToReturn = this.empresas.find((emp)=>{
+        return emp.codigo === codigo;
+    });
+    return empresaToReturn;
+    }
+    add(nuevaEmpresa : IEmpresa) {
+    const date = new Date();
+    const nueva: IEmpresa = {
+        ...nuevaEmpresa,
+        codigo: (Math.random()* 1000).toString()+new Date().getTime().toString(),
+        created: date,
+        updated: date
+    }
+    this.empresas.push(nueva);
+    return true;
+    }
+
+    update(updateEmpresa: IEmpresa){
+    const newEmpresas: IEmpresa[] = this.empresas.map((emp)=>{
+        if ( emp.codigo === updateEmpresa.codigo ) {
+        return {...emp, ...updateEmpresa, updated: new Date()};
+        }
+        return emp;
+    });
+    this.empresas = newEmpresas;
+    return true;
+    }
+    delete(codigo: string){
+    const empresaToDelete = this.empresas.find((emp)=>{
+        return emp.codigo === codigo;
+    });
+    if(empresaToDelete){
+        const newEmpresas: IEmpresa[] = this.empresas.filter((emp)=>{
+        return emp.codigo !== codigo;
         });
         this.empresas = newEmpresas;
         return true;
+    }
+    return false;
     }
 }

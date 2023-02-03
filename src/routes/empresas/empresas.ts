@@ -38,10 +38,14 @@ return res.status(404).json({"error":"No se encontró Empresa"});
 router.post('/new', (req, res) => {
 console.log("Empresas /new request body:", req.body);
 const {
-    nombre ="John Doe Corp",
-    status = "Activo"
+    nombre ="---- NOT SPECIFIED",
+    status = "---- NOT SPECIFIED"
 } = req.body;
-  
+
+if ((nombre === "---- NOT SPECIFIED") || (status === "---- NOT SPECIFIED") ) {
+    return res.status(403).json({"error": "Faltan datos para guardar empresa"});
+}
+
 const newEmpresa: IEmpresa = {
     codigo : "",
     nombre,
@@ -58,10 +62,14 @@ return res.status(404).json(
 router.put('/upd/:id', (req, res) => {
 const { id } = req.params;
 const {
-    nombre="John Doe Corp",
-    status="Activo",
+    nombre="---- NOT SPECIFIED",
+    status="---- NOT SPECIFIED",
     observacion = ""
 } = req.body;
+
+if ((nombre === "---- NOT SPECIFIED") || (status === "---- NOT SPECIFIED") ) {
+    return res.status(403).json({"error": "Error al actualizar Empresa"});
+}
 
 const UpdateEmpresa : IEmpresa = {
     codigo: id,

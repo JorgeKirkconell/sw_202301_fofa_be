@@ -3,7 +3,7 @@ export interface IUsuarios {
     correo: string;
     nombre: string;
     password: string;
-    roles?: string;
+    roles: string[];
     created?: Date;
     ultimoAcceso?: Date;
     observacion?: string;
@@ -25,29 +25,36 @@ private usuarios : IUsuarios[];
     });
     return usuarioToReturn;
     }
+
+
     add(nuevoUsuario : IUsuarios) {
     const date = new Date();
+    
     const nueva: IUsuarios = {
         ...nuevoUsuario,
         codigo: (Math.random()* 1000).toString()+new Date().getTime().toString(),
         created: date,
         ultimoAcceso: date,
-        roles: "UsuarioNormal"
+        
     }
     this.usuarios.push(nueva);
     return true;
     }
 
     update(updateUsuario: IUsuarios){
+        let updated = false;
     const newUsuarios: IUsuarios[] = this.usuarios.map((usr)=>{
         if ( usr.codigo === updateUsuario.codigo ) {
-        return {...usr, ...updateUsuario, updated: new Date()};
+            updated = true;
+        return {...usr, ...updateUsuario};
         }
         return usr;
     });
     this.usuarios = newUsuarios;
-    return true;
+    return updated;
     }
+
+
     delete(codigo: string){
     const usuarioToDelete = this.usuarios.find((usr)=>{
         return usr.codigo === codigo;

@@ -11,22 +11,15 @@ usuariosModel.add({
     correo: 'correoAdmin@unicah.edu',
     nombre: 'usuarioAdmin',
     password: 'usuarioAdmin',
+    roles: ["UsuarioAdmin"]
 });
 
 router.get('/', (_req, res)=>{
     const jsonUrls = {
         "getAll": {"method":"get", "url": "usuarios/all"},
         "getById": {"method":"get", "url": "usuarios/byid/:id"},
-        "new": {"method":"post", "url": "usuarios/new", "formatBody (Min)":{
-            correo: '',
-            nombre: '',
-            password: ''
-        }},
-        "update": {"method":"put", "url": "usuarios/upd/:id", "formatBody (Min >> if not: User Blocked)":{
-            correo: '',
-            nombre: '',
-            password: ''
-        }},
+        "new": {"method":"post", "url": "usuarios/new"},
+        "update": {"method":"put", "url": "usuarios/upd/:id"},
         "delete": {"method":"delete", "url": "usuarios/del/:id"},
     };
     res.status(200).json(jsonUrls);
@@ -50,15 +43,22 @@ router.get('/byid/:id', (req, res)=>{
 router.post('/new', (req, res) => {
     console.log("Usuarios /new request body:", req.body);
     const {
-        correo = 'nuevoRegistro@registro.com',
-        nombre = 'UsuarioNuevo',
-        password ='UsuarioNuevo'
+        correo = '---- NOT SPECIFIED',
+        nombre = '---- NOT SPECIFIED',
+        password ='---- NOT SPECIFIED',
+        roles = ["RolNoAsignado"]
     } = req.body;
+
+    if ((correo === "---- NOT SPECIFIED") || (nombre === "---- NOT SPECIFIED") || (password === "---- NOT SPECIFIED") ){
+        return res.status(403).json({"error": "Faltan datos para guardar Usuario"});
+    }
+
     const newUsuario: IUsuarios = {
         codigo : "",
         correo,
         nombre,
-        password
+        password,
+        roles
         
     };
     if (usuariosModel.add(newUsuario)) {
@@ -71,16 +71,19 @@ router.post('/new', (req, res) => {
 
 router.put('/upd/:id', (req, res) => {
     const { id } = req.params;
-    console.log(id);
-    console.log(req.body);
 
     const {
-        correo,
-        nombre,
-        password,
-        roles,
+        correo = "---- NOT SPECIFIED",
+        nombre = "---- NOT SPECIFIED",
+        password = "---- NOT SPECIFIED",
+        roles = ["---- NOT SPECIFIED"],
         observacion = "Registro Modificado en algun momento"
     } = req.body;
+
+if ((correo === "---- NOT SPECIFIED") || (nombre === "---- NOT SPECIFIED") || (password === "---- NOT SPECIFIED") || (roles[0] === "---- NOT SPECIFIED")) {
+    return res.status(403).json({"error": "Error al actualizar Usuario"});
+}
+
     const UpdateUsuario : IUsuarios = {
         codigo: id,
         correo,

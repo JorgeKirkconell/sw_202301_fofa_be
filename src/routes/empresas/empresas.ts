@@ -3,7 +3,7 @@ const router = express.Router();
 import { EmpresasDao } from '@dao/models/Empresas/EmpresasDao';
 import { MongoDBConn } from '@dao/MongoDBConn';
 import { IEmpresa } from '@dao/models/Empresas/IEmpresas';
-import { Empresas } from '@libs/Empresas/Empresas';
+import { Empresas } from '@libs/empresas/Empresas';
 const empresasDao = new EmpresasDao(MongoDBConn);
 let empresasModel:Empresas;
 empresasDao.init().then(()=>{

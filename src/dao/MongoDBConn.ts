@@ -9,8 +9,10 @@ export class MongoDBConn implements IDBConnection {
 	private constructor(){}
 	public static async getConnection(){
 		if(!this.connection){
-      this.connection = await MongoClient.connect(mongoURI);
+    this.connection = await MongoClient.connect(mongoURI);
 		}
     return this.connection.db(mongoDBName);
 	}
 }
+
+

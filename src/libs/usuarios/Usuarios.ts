@@ -1,35 +1,21 @@
-export interface IUsuarios {
-    codigo: string;
-    correo: string;
-    nombre: string;
-    password: string;
-    roles: string[];
-    created?: Date;
-    ultimoAcceso?: Date;
-    observacion?: string;
-}
-
+import { IUsuarios } from "@dao/models/Usuarios/IUsuarios";
+import { IDataAccessObject } from "@dao/IDataAccessObject";
 
 export class Usuarios {
-
+private dao: IDataAccessObject;
 private usuarios : IUsuarios[];
-    constructor(){
-    this.usuarios = [];
+    constructor(dao: IDataAccessObject){
+    this.dao = dao;
     }
     getAll(){
-    return this.usuarios;
+    return this.dao.findAll();
     }
     getById(codigo: string){
-    const usuarioToReturn = this.usuarios.find((usr)=>{
-        return usr.codigo === codigo;
-    });
-    return usuarioToReturn;
+        return this.dao.findByID(codigo);
     }
-
 
     add(nuevoUsuario : IUsuarios) {
     const date = new Date();
-    
     const nueva: IUsuarios = {
         ...nuevoUsuario,
         codigo: (Math.random()* 1000).toString()+new Date().getTime().toString(),
@@ -37,35 +23,16 @@ private usuarios : IUsuarios[];
         ultimoAcceso: date,
         
     }
-    this.usuarios.push(nueva);
-    return true;
+    return this.dao.create(nueva);
     }
 
-    update(updateUsuario: IUsuarios){
-        let updated = false;
-    const newUsuarios: IUsuarios[] = this.usuarios.map((usr)=>{
-        if ( usr.codigo === updateUsuario.codigo ) {
-            updated = true;
-        return {...usr, ...updateUsuario};
-        }
-        return usr;
-    });
-    this.usuarios = newUsuarios;
-    return updated;
+    update(codigo: string, updateUsuario: IUsuarios){
+        const updateObject = { ...updateUsuario, updated: new Date() };
+        return this.dao.update(codigo, updateObject);
     }
 
 
     delete(codigo: string){
-    const usuarioToDelete = this.usuarios.find((usr)=>{
-        return usr.codigo === codigo;
-    });
-    if(usuarioToDelete){
-        const newUsuarios: IUsuarios[] = this.usuarios.filter((usr)=>{
-        return usr.codigo !== codigo;
-        });
-        this.usuarios = newUsuarios;
-        return true;
-    }
-    return false;
+        return this.dao.delete(codigo);
     }
 }

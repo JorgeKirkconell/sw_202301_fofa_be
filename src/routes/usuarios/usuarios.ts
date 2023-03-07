@@ -1,18 +1,17 @@
 import express from 'express';
 const router = express.Router();
 
-import { Usuarios, IUsuarios } from '@libs/usuarios/Usuarios';
-
-const usuariosModel = new Usuarios();
-
-//Superusuario
-usuariosModel.add({
-    codigo: '',
-    correo: 'correoAdmin@unicah.edu',
-    nombre: 'usuarioAdmin',
-    password: 'usuarioAdmin',
-    roles: ["UsuarioAdmin"]
+import { Usuarios} from '@libs/usuarios/Usuarios';
+import { IUsuarios } from '@dao/models/Usuarios/IUsuarios';
+import { UsuariosDao } from '@dao/models/Usuarios/UsuariosDao';
+import { MongoDBConn } from '@dao/MongoDBConn';
+const usuariosDao = new UsuariosDao(MongoDBConn)
+let usuariosModel:Usuarios;
+usuariosDao.init().then(()=>{
+    usuariosModel = new Usuarios(usuariosDao);
 });
+
+
 
 router.get('/', (_req, res)=>{
     const jsonUrls = {
@@ -26,13 +25,13 @@ router.get('/', (_req, res)=>{
     });
 
 
-router.get('/all', (_req, res) => {
-    res.status(200).json(usuariosModel.getAll());
+router.get('/all', async (_req, res) => {
+    res.status(200).json(await usuariosModel.getAll());
 });
 
-router.get('/byid/:id', (req, res)=>{
+router.get('/byid/:id', async (req, res)=>{
     const {id: codigo} = req.params;
-    const usuario = usuariosModel.getById(codigo);
+    const usuario = await usuariosModel.getById(codigo);
     if(usuario){
         return res.status(200).json(usuario);
     }
@@ -40,7 +39,7 @@ router.get('/byid/:id', (req, res)=>{
 });
 
 
-router.post('/new', (req, res) => {
+router.post('/new', async (req, res) => {
     console.log("Usuarios /new request body:", req.body);
     const {
         correo = '---- NOT SPECIFIED',
@@ -61,7 +60,7 @@ router.post('/new', (req, res) => {
         roles
         
     };
-    if (usuariosModel.add(newUsuario)) {
+    if (await usuariosModel.add(newUsuario)) {
         return res.status(200).json({"created": true});
     }
     return res.status(404).json(
@@ -69,7 +68,7 @@ router.post('/new', (req, res) => {
     );
 });
 
-router.put('/upd/:id', (req, res) => {
+router.put('/upd/:id', async (req, res) => {
     const { id } = req.params;
 
     const {
@@ -93,7 +92,7 @@ if ((correo === "---- NOT SPECIFIED") || (nombre === "---- NOT SPECIFIED") || (p
         observacion,
     };
         
-    if (usuariosModel.update(UpdateUsuario)) {
+    if (await usuariosModel.update(id, UpdateUsuario)) {
         return res
         .status(200)
         .json({"updated": true});
@@ -107,8 +106,9 @@ if ((correo === "---- NOT SPECIFIED") || (nombre === "---- NOT SPECIFIED") || (p
         );
     });
 
-    router.delete('/del/:id', (req, res)=>{  const {id : codigo} = req.params;
-if(usuariosModel.delete(codigo)){
+router.delete('/del/:id', async (req, res)=>{  
+        const {id : codigo} = req.params;
+        if(await usuariosModel.delete(codigo)){
     return res.status(200).json({"deleted": true});
 }
 return res.status(404).json({"error":"No se pudo eliminar el usuario"});

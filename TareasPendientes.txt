@@ -9,3 +9,11 @@
 -----------------------------------------------------
 - Revisar la encriptacion de la contraseña (QUEDA PARA 2DO PARCIAL)
 --------------------------------------------PENDIENTE
+
+
+
+-------------------------
+Crear modelo usuarios en la ruce src/dao/models/usuarios <TERMIANDO>
+Mofificar el libs de usuarios <TERMIANDO>
+Revisar las rutas de usuarios
+

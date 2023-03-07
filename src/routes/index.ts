@@ -31,6 +31,9 @@ router.get('/version', (_req, res)=>{
 import empresasRouter from './empresas/empresas';
 router.use('/empresas', empresasRouter);
 
+import usuariosRouter from './usuarios/usuarios';
+router.use('/usuarios', usuariosRouter);
+
  //router.get  router.post router.put router.delete  router.use
 
 export default router;
